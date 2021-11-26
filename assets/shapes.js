@@ -18,9 +18,10 @@
        const lineShape = [[0, 1], [0, 2], [0, 3]]
              
     
-        const tShapes = [tShape,squareShape,lShape,lineShape,zShape];
+        const shapes = [tShape,squareShape,lShape,lineShape,zShape];
         
-
-
+        const random = Math.floor(Math.random()*shapes.length);
+        const tShapes = shapes[random]
+       
 
     export default tShapes;

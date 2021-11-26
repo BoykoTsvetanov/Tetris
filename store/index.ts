@@ -20,15 +20,13 @@ export type RootState = ReturnType<typeof state>
 export const mutations: MutationTree<RootState> = {
     
     setField(state, cells): void {
-        console.log(state);
         
      state.cells = cells;
 
         //state.tetramino.x++
     },
     incrementPosition(state,payload) {
-        console.log(payload);
-        console.log(state);
+    
         const newY = payload.yPos;
         const newX = payload.xPos;
         const key = payload.value;
@@ -74,8 +72,8 @@ export const getters: GetterTree<RootState,RootState> = {
     cells(state) {
             if(!state.cells.length) return []
             const occ = [];
-            const random = Math.floor(Math.random()*shapes.length);
-            const tShapes = shapes[random]
+            //const random = Math.floor(Math.random()*shapes.length);
+            const tShapes = shapes
             
             
             const tetrCells:any = _.cloneDeep(state.cells);
@@ -95,7 +93,7 @@ export const getters: GetterTree<RootState,RootState> = {
                                     isChecked: true
                                 }
                             
-                                    if(y < 0) {
+                                    if(y === -1) {
                                         y = 0;
                                         
                                     }  else if(y > 8) {
