@@ -1,143 +1,124 @@
 import { ActionTree, MutationTree , GetterTree} from 'vuex'
 import Cells from '~/types/globa';
-import switchCases  from '../assets/logic'
-import textColor from '../assets/colors'
 import shapes from '../assets/shapes'
+import collisions from 'assets/collisions'
 import _ from 'lodash'
+import rotate from '~/assets/rotation';
 export const state = () => ({
    
     cells: [] as Cells[],
-    column: 20,
+    currShape: [] as number[],
+    column: 18,
     rows: 10,
-      x: 0,
-         y: 0,         
-    
-    
-   
+    x: 0,
+    y: 4,
 });
 export type RootState = ReturnType<typeof state>
     
 export const mutations: MutationTree<RootState> = {
     
     setField(state, cells): void {
-        
-     state.cells = cells;
+        state.cells = cells
 
-        //state.tetramino.x++
     },
+
+    setCurrShape(state, currShape): void {
+          state.currShape = currShape
+    },
+
     incrementPosition(state,payload) {
-    
-        const newY = payload.yPos;
-        const newX = payload.xPos;
-        const key = payload.value;
-        switch (key) {
-            case 37:
-            //	alert('left')
-                   if(state.y < 0) {
-                       state.y = 0
-                   } else {
-                       state.y--
-                   }
-                break;
-            case 38:
-                //alert('up');
-                
-                break;
-            case 39:
-                //alert('right');
-                if(state.y >8) {
-                    state.y = 8
-                } else {
-                    state.y++
-                }
-                
-                break;
-            case 40:
-                if(state.x >=18) {
-                    state.x = 17
-                } else {
-                    state.x++
-                }
-               
-                //alert('down');
-                break;
-    
+        const tetrCells = _.cloneDeep(state.cells);
+        const currShape = state.currShape
+        const pass = false;
+ 
+           
+            
+        if(payload === 'ArrowLeft') {
+            state.y--;
+        }else if (payload === 'ArrowRight') {
+            state.y++
+        } else if (payload === 'ArrowDown') {
+            state.x++
         }
         
         
+
+    },
+    rotateShape(state) {
+        const currShape:any = _.cloneDeep(state.currShape);
+        const rotation = rotate(currShape);
+        state.currShape = rotation as any
     }
  
 }
 export const getters: GetterTree<RootState,RootState> = {
     cells(state) {
             if(!state.cells.length) return []
-            const occ = [];
-            //const random = Math.floor(Math.random()*shapes.length);
-            const tShapes = shapes
-            
-            
+            const pass = true
+         
             const tetrCells:any = _.cloneDeep(state.cells);
-            //const {x , y} = state.tetramino;
+            const currShape:any = state.currShape;
+           
             let x = state.x;
             let y = state.y;
-            
-
-                
-                for (let i = 0; i < tShapes.length; i++) {
+            collisions(tetrCells,currShape,x,y, pass)
+       
+                for (let i = 0; i < currShape.length; i++) {
                             
-                    for (let j = 0; j < tShapes[i].length; j++) {
-                        const currentShape = tShapes[i][j]
+                    for (let j = 0; j < currShape[i].length; j++) {
+                        const currentShape = currShape[i][j]
                             if(currentShape > 0) {
                                 const shapeParams = {
                                     color: 'bg-red-600',
                                     isChecked: true
                                 }
-                            
-                                    if(y === -1) {
-                                        y = 0;
-                                        
-                                    }  else if(y > 8) {
-                                            y = 8;
-                                            
-                                    } else {
-                                        tetrCells[i+x][j+y] = shapeParams;
-                                    }
-                                        
-                                    if(x >= 18) {
-                                        x = 17;
-                                        
-                                    } else {
-                                        tetrCells[i+x][j+y] = shapeParams;
-                                    }
+                                    tetrCells[i+x][j+y] = shapeParams;
+                              
                                 
                             }   
                     }   
                 }
-            // cells[i+x][j+y] = tetramino.shape[i][j]
-            
-                
+       
             return tetrCells; 
         },
        
     }
 
 export const actions: ActionTree<RootState, RootState> = {
-    initField(context) {
-
+    initField(context) {        
+            
        const cells:any[] = [];
-       for (let i = 0; i < 20; i++) {
-        cells[i] = [];
     
-        for (let j = 0; j < 10; j++) {
-            const cellsParams = {
-                color: 'bg-white-600',
-                isChecked: false
-            }
-            cells[i].push(cellsParams)
-        } 
-    }
-     context.commit('setField', cells)
-     context.getters.calc
+       for (let i = 0; i <= context.state.column; i++) {
+            cells[i] = [];
+            
+            for (let j = 0; j <= context.state.rows; j++) {
+                const cellsParams = {
+                    color: 'bg-white-600',
+                    isChecked: false
+                }
+                cells[i].push(cellsParams)
+            
+            } 
+        }
+        cells[7][4] = {
+            color: 'bg-green-600',
+            isChecked: true
+        }
+    
+        context.commit('setField', cells)
+
+        
+
 } ,
+    rotatingShape(context) {
+        const random = Math.floor(Math.random()*shapes.length);
+        const currShape = shapes[random]
+        context.commit('setCurrShape', currShape)
+    },
+    keypressEvent(context,payload) {
+          context.commit('incrementPosition',payload)
+            
+    }
     
 }

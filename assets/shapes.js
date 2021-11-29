@@ -4,7 +4,7 @@
                 [1, 0, 0],
                 [1, 1, 0],
                 ]
-        const tShape = [[1,1,1],[0,1,0],[0,0,0]]
+        const tShape = [[1,1,1],[0,1,0]]
        const zShape = [
                 [1, 1, 0],
                 [0, 1, 1],
@@ -20,8 +20,8 @@
     
         const shapes = [tShape,squareShape,lShape,lineShape,zShape];
         
-        const random = Math.floor(Math.random()*shapes.length);
-        const tShapes = shapes[random]
+        // const random = Math.floor(Math.random()*shapes.length);
+        // const tShapes = shapes[random]
        
 
-    export default tShapes;
+    export default shapes;

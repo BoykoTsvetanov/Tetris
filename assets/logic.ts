@@ -3,8 +3,8 @@ export default function switchCases(key:number,x:number,y:number) {
   switch (key) {
 		case 37:
 		//	alert('left')
-			x++;
-			break;
+			
+	
 		case 38:
 			//alert('up');
 			x++;
