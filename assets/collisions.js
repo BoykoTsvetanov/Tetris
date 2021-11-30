@@ -1,45 +1,75 @@
-function collide (cells,shapes,x,y, pass) {
+function collideAll (cells,shapes,x,y, pass) {
     //const pass = true;
     const tShapes = shapes;
     const posY = y;
     const posX = x;
+   
     for (let row = 0; row < tShapes.length; row++) {
         
-            for (let col = 0; col < tShapes[row].length; col++) {
+            for (let col = 0; col < tShapes[row].length - 1; col++) {
                     if(tShapes[row][col] != 0) {
-                        if(col + posY < 0) {
-                            pass = false
+                        if(col + posY <= 0) {
+                            pass = true
+                        
                             console.log('this block would be to the left of the playing field');
-                            break
+                          
                         }
                          if(col + posY >= cells[0].length - 1) {
                            
-                             pass = false
+                             pass = true
+                        
                              console.log('this block would be to the right of the playing field');
-                             break     
+                            
                          }
                         if(row + posX >= cells.length - 1) {
-                       
-                            pass = false
+                            pass = true
+                        
                             console.log('end of playing field');
-                            break
+                           
+                           
                         }
                          if (cells[row + posX][col + posY].isChecked
                              ) {
-                                 const level = cells[col+ posX];
-                               // level.forEach((res) => console.log(res.isChecked))
-                                 pass = false
+                                 pass = true
+                            
                                  console.log('space is taken')
-                                 break
-                                 ;
+                               
                              }
                     }
 
             
                 
             }
-        
+           
+    }
+        return pass
+}
+function collideCheck (cells,shapes,x, y) {
+    
+    for (let row = 0; row < shapes.length; row++) {
+        for (let col = 0; col < shapes[row].length; col++) {
+           if(cells[row + x][col + y].isChecked && shapes[row][col] != 0) return true
+        }
     }
         
+    return false
 }
-export default collide
+function leftCheck(y) {
+    return y < 0
+    
+}
+function rightCheck (cells,shapes,x) {
+    return x + shapes[0].length > cells[0].length
+   
+}
+function downCheck (cells,shapes,y) {
+    
+    return y + shapes.length > cells.length;
+
+}
+function downLanded (cells,shapes,y) {
+    return y + shapes.length === cells.length
+}
+
+export { collideCheck, leftCheck, rightCheck, downCheck, downLanded }
+

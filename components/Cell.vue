@@ -62,6 +62,7 @@ export default Vue.extend ({
     
         }
                 this.$store.dispatch('keypressEvent',key)
+                this.$store.dispatch('landed')
            //this.$store.dispatch('incrementPosition',key)
            
        } ,

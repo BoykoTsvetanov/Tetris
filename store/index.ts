@@ -1,7 +1,7 @@
-import { ActionTree, MutationTree , GetterTree} from 'vuex'
+import { ActionTree, MutationTree, GetterTree} from 'vuex'
 import Cells from '~/types/globa';
 import shapes from '../assets/shapes'
-import collisions from 'assets/collisions'
+import { leftCheck, rightCheck, downCheck ,collideCheck,downLanded } from 'assets/collisions'
 import _ from 'lodash'
 import rotate from '~/assets/rotation';
 export const state = () => ({
@@ -10,8 +10,9 @@ export const state = () => ({
     currShape: [] as number[],
     column: 18,
     rows: 10,
-    x: 0,
+    x: 0, 
     y: 4,
+    landed: false
 });
 export type RootState = ReturnType<typeof state>
     
@@ -19,30 +20,69 @@ export const mutations: MutationTree<RootState> = {
     
     setField(state, cells): void {
         state.cells = cells
-
+       
+        
     },
 
     setCurrShape(state, currShape): void {
           state.currShape = currShape
-    },
-
-    incrementPosition(state,payload) {
-        const tetrCells = _.cloneDeep(state.cells);
-        const currShape = state.currShape
-        const pass = false;
- 
-           
             
-        if(payload === 'ArrowLeft') {
-            state.y--;
-        }else if (payload === 'ArrowRight') {
-            state.y++
-        } else if (payload === 'ArrowDown') {
-            state.x++
+            
+    },
+    setLanded(state,newCells) {
+        const tetrCells = _.cloneDeep(state.cells); 
+         const currShape = state.currShape
+        let x = state.x;
+        const landed = downLanded(tetrCells,currShape,x)
+        if(landed) {
+            state.cells = newCells
         }
         
         
-
+        
+        
+    },
+    incrementPosition(state,payload) {
+      
+     const tetrCells = _.cloneDeep(state.cells); 
+    
+     
+     const currShape = state.currShape
+        let x = state.x;
+        let y = state.y;
+    
+        if(payload === 'ArrowLeft') {
+            y--         
+        } else if (payload === 'ArrowRight') {
+            y++     
+        } else if (payload === 'ArrowDown') {
+            x++  
+        }
+        const passBottom = downCheck(tetrCells,currShape,x)
+        if(passBottom) {
+            console.log(passBottom);
+            
+            state.landed = true;
+            return
+        }
+        const passLeftWall = leftCheck(y)
+        if(passLeftWall) {
+            return
+        }
+        const passRightWall = rightCheck(tetrCells,currShape,y)
+        if(passRightWall) {
+            return
+        }
+        const overlap = collideCheck(tetrCells,currShape,x,y)
+        if(overlap) {
+            return
+        }
+       
+        //if(passLeftWall || passRightWall || passBottom || overlap) return
+        state.y = y;
+        state.x = x;
+        
+        
     },
     rotateShape(state) {
         const currShape:any = _.cloneDeep(state.currShape);
@@ -54,15 +94,11 @@ export const mutations: MutationTree<RootState> = {
 export const getters: GetterTree<RootState,RootState> = {
     cells(state) {
             if(!state.cells.length) return []
-            const pass = true
-         
             const tetrCells:any = _.cloneDeep(state.cells);
             const currShape:any = state.currShape;
-           
             let x = state.x;
             let y = state.y;
-            collisions(tetrCells,currShape,x,y, pass)
-       
+      
                 for (let i = 0; i < currShape.length; i++) {
                             
                     for (let j = 0; j < currShape[i].length; j++) {
@@ -78,10 +114,11 @@ export const getters: GetterTree<RootState,RootState> = {
                             }   
                     }   
                 }
-       
+            
+                    
             return tetrCells; 
         },
-       
+         
     }
 
 export const actions: ActionTree<RootState, RootState> = {
@@ -105,11 +142,9 @@ export const actions: ActionTree<RootState, RootState> = {
             color: 'bg-green-600',
             isChecked: true
         }
-    
-        context.commit('setField', cells)
-
         
-
+            
+        context.commit('setField', cells)
 } ,
     rotatingShape(context) {
         const random = Math.floor(Math.random()*shapes.length);
@@ -119,6 +154,14 @@ export const actions: ActionTree<RootState, RootState> = {
     keypressEvent(context,payload) {
           context.commit('incrementPosition',payload)
             
+    },
+    landed(context) {
+        
+        const newCells = context.getters.cells
+        
+        
+        context.commit('setLanded',newCells)
+        
     }
     
 }
