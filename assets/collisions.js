@@ -45,7 +45,7 @@ function collideAll (cells,shapes,x,y, pass) {
         return pass
 }
 function collideCheck (cells,shapes,x, y) {
-    
+
     for (let row = 0; row < shapes.length; row++) {
         for (let col = 0; col < shapes[row].length; col++) {
            if(cells[row + x][col + y].isChecked && shapes[row][col] != 0) return true
@@ -68,8 +68,43 @@ function downCheck (cells,shapes,y) {
 
 }
 function downLanded (cells,shapes,y) {
+  
     return y + shapes.length === cells.length
 }
+function rotateShapeRight(cells,shape,x) {
+    
+    return x + shape[0].length > cells[0].length;
+}
+function rotateShapeCollide(cells,shape,x,y) {
+      
+    for (let row = 0; row < shape.length; row++) {
+        
+        for (let col = 0; col < shape[row].length; col++) {
+            
+           if(cells[row + x][col + y].isChecked && shape[row][col] != 0) return true
+        }
+    }
 
-export { collideCheck, leftCheck, rightCheck, downCheck, downLanded }
+    return false
+}
+
+function landedOnTopOfShape(cells,shape,x,y,keyPressed) { 
+    
+                        if(keyPressed === 'ArrowDown') {
+                       for (let row = 0; row < shape.length; row++) {
+        
+                        for (let col = 0; col < shape[row].length; col++) {
+                            
+                           if(cells[row + x][col + y].isChecked && shape[row][col] != 0) return true
+                        }
+                    }
+                
+                }
+                
+            
+
+    return false
+}
+
+export { collideCheck, leftCheck, rightCheck, downCheck, downLanded, rotateShapeRight, rotateShapeCollide, landedOnTopOfShape }
 
