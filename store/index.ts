@@ -182,8 +182,8 @@ export const actions: ActionTree<RootState, RootState> = {
         
     },
     findingLines({state, dispatch}) {
-        const line:any = _.cloneDeep(state.cells);
-        let clearLine:number[] = [];
+            const line:any = _.cloneDeep(state.cells);
+            let clearLine:number[] = [];
             line.reduce((acc:[object],row:number[]) => {
             let filtered = row.filter((x:any) => x.isChecked);
             const indexOf = line.indexOf(row);
@@ -194,18 +194,16 @@ export const actions: ActionTree<RootState, RootState> = {
            );
 
            dispatch('clearLines',clearLine);
-          // clearLine = [];
-           
-           
+    
     },
     clearLines({ state, commit },clearLine) {
                
-             const tetrCells:any = _.cloneDeep(state.cells);
+                const tetrCells:any = _.cloneDeep(state.cells);
               
                 clearLine.forEach((x:any) => {
                 const index = x.indexToClear;
                 tetrCells.splice(index,1);
-                tetrCells.unshift(Array(11).fill({color: 'bg-white-600',isChecked:false}))
+                tetrCells.unshift(new Array(tetrCells[0].length).fill({color: 'bg-white-600',isChecked:false}))
             })
               commit('removeLines',tetrCells)
     }
