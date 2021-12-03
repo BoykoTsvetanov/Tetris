@@ -1,7 +1,5 @@
 <template>
-    <Tetris />
- 
-  
+ <GameOver />
 </template>
 
 <script lang="ts">

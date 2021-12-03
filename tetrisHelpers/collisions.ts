@@ -1,4 +1,6 @@
-function collideAll (cells,shapes,x,y, pass) {
+import {Cell} from '~/types/globa'
+
+function collideAll (cells: Cell[][], shapes: number[][], x:number, y:number, pass:boolean) {
     //const pass = true;
     const tShapes = shapes;
     const posY = y;
@@ -44,7 +46,7 @@ function collideAll (cells,shapes,x,y, pass) {
     }
         return pass
 }
-function collideCheck (cells,shapes,x, y) {
+function collideCheck (cells: Cell[][], shapes: number[][],x:number, y:number) {
 
     for (let row = 0; row < shapes.length; row++) {
         for (let col = 0; col < shapes[row].length; col++) {
@@ -54,28 +56,28 @@ function collideCheck (cells,shapes,x, y) {
         
     return false
 }
-function leftCheck(y) {
+function leftCheck(y:number) {
     return y < 0
     
 }
-function rightCheck (cells,shapes,x) {
+function rightCheck (cells: Cell[][], shapes: number[][],x:number) {
     return x + shapes[0].length > cells[0].length
    
 }
-function downCheck (cells,shapes,y) {
+function downCheck (cells: Cell[][], shapes: number[][],y:number) {
     
     return y + shapes.length > cells.length;
 
 }
-function downLanded (cells,shapes,y) {
+function downLanded (cells: Cell[][], shapes: number[][],y:number) {
   
     return y + shapes.length === cells.length
 }
-function rotateShapeRight(cells,shape,x) {
+function rotateShapeRight(cells:any[],shape:any[],x:number) {
     
     return x + shape[0].length > cells[0].length;
 }
-function rotateShapeCollide(cells,shape,x,y) {
+function rotateShapeCollide(cells:any[],shape:any[],x:number,y:number) {
       
     for (let row = 0; row < shape.length; row++) {
         
@@ -88,18 +90,18 @@ function rotateShapeCollide(cells,shape,x,y) {
     return false
 }
 
-function landedOnTopOfShape(cells,shape,x,y,keyPressed) { 
-    
-                        if(keyPressed === 'ArrowDown') {
-                       for (let row = 0; row < shape.length; row++) {
+function landedOnTopOfShape(cells:any[],shape:any[],x:number,y:number,keyPressed:string) { 
+
+        if(keyPressed === 'ArrowDown') {
+        for (let row = 0; row < shape.length; row++) {
         
-                        for (let col = 0; col < shape[row].length; col++) {
+        for (let col = 0; col < shape[row].length; col++) {
                             
-                           if(cells[row + x][col + y].isChecked && shape[row][col] != 0) return true
-                        }
-                    }
+        if(cells[row + x][col + y].isChecked && shape[row][col] != 0) return true
+              }
+         }
                 
-                }
+}
                 
             
 
