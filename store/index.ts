@@ -1,9 +1,10 @@
 import { ActionTree, MutationTree, GetterTree} from 'vuex'
-import {Cell} from '~/types/globa';
+import {Cell, Entitlement} from '~/types/globa';
 import shapes from '../tetrisHelpers/shapes'
 import { leftCheck, rightCheck, downCheck ,collideCheck, rotateShapeRight, rotateShapeCollide, landedOnTopOfShape } from '~/tetrisHelpers/collisions'
 import _ from 'lodash'
 import rotate from '~/tetrisHelpers/rotation';
+import {solve} from '../entitleHelper/entittlment'
 export const state = () => ({
    
     cells: [] as Cell[][],
@@ -13,6 +14,7 @@ export const state = () => ({
     x: 0, 
     y: 4,
     gameOver: false,
+    entitlement: solve
 });
 export type RootState = ReturnType<typeof state>
     
@@ -232,6 +234,27 @@ export const actions: ActionTree<RootState, RootState> = {
             })
               commit('removeLines',tetrCells)
     },
+
+    entitlement({state}) {
+        
+       
+        const oldEntitlement = [{
+            productCode: 'dada',
+            startDate: '12.07.2020',
+            endDate: '17.04.2021'
+        }]
+        
+        const newEntitlement = [{
+            productCode: 'd',
+            startDate: '12.07.2020',
+            endDate: '17.04.2021'
+        }]
+        //const dif = solve(oldEntitlement,newEntitlement);
+       // console.log(dif);
+        
+        
+        
+    }
   
     
 }
