@@ -8,7 +8,6 @@
 
 <script>
 import Vue from 'vue'
-import { mapState } from 'vuex'
 export default Vue.extend ({
     
    methods: {
@@ -17,7 +16,5 @@ export default Vue.extend ({
            this.$store.dispatch('initField');
        }
    }
-
-
 })
 </script>
